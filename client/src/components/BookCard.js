@@ -13,7 +13,7 @@ function BookCard({ book }) {
 
   const fetchReviews = async () => {
     try {
-      const response = await fetch(`http://localhost:5555/review/book/${book.id}`);
+      const response = await fetch(`/review/book/${book.id}`);
       const data = await response.json();
       setReviews(data);
     } catch (error) {
@@ -25,7 +25,7 @@ function BookCard({ book }) {
     if (newReview.trim()) {
       try {
         const token = localStorage.getItem('jwt_token');
-        const response = await fetch('http://localhost:5555/review', {
+        const response = await fetch('/review', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ function BookCard({ book }) {
     if (editReview.trim()) {
       try {
         const token = localStorage.getItem('jwt_token');
-        const response = await fetch(`http://localhost:5555/review/${reviews[editIndex].id}`, {
+        const response = await fetch(`/review/${reviews[editIndex].id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -79,7 +79,7 @@ function BookCard({ book }) {
   const deleteReview = async (index) => {
     try {
       const token = localStorage.getItem('jwt_token');
-      await fetch(`http://localhost:5555/review/${reviews[index].id}`, {
+      await fetch(`/review/${reviews[index].id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

@@ -10,25 +10,20 @@ function BookDetails() {
   const [newReview, setNewReview] = useState("");
   const [editReviewId, setEditReviewId] = useState(null);
   const [editReviewContent, setEditReviewContent] = useState("");
-  const [error, setError] = useState("");
   const isAuthenticated = Boolean(localStorage.getItem("jwt_token")); // Replace with actual auth check
 
   const navigate = useNavigate();
   useEffect(() => {
     const fetchBookDetails = async () => {
       try {
-        const bookResponse = await fetch(
-          `http://localhost:5555/book/${bookId}`
-        );
+        const bookResponse = await fetch(`/book/${bookId}`);
         if (!bookResponse.ok) {
           throw new Error("Failed to fetch book details");
         }
         const bookData = await bookResponse.json();
         setBook(bookData);
 
-        const reviewsResponse = await fetch(
-          `http://localhost:5555/review/book/${bookId}`
-        );
+        const reviewsResponse = await fetch(`/review/book/${bookId}`);
         if (!reviewsResponse.ok) {
           throw new Error("Failed to fetch reviews");
         }
@@ -47,7 +42,7 @@ function BookDetails() {
       try {
         const token = localStorage.getItem("jwt_token");
         const response = await fetch(
-          `http://localhost:5555/book_detail/${bookId}`, // Corrected endpoint
+          `/book_detail/${bookId}`, // Corrected endpoint
           {
             method: "POST",
             headers: {
@@ -77,7 +72,7 @@ function BookDetails() {
         ]);
         setNewReview("");
       } catch (error) {
-        setError("Failed to add review. Please try again.");
+        console.log(error);
       }
     }
   };
@@ -86,17 +81,14 @@ function BookDetails() {
     if (editReviewContent.trim()) {
       try {
         const token = localStorage.getItem("jwt_token");
-        const response = await fetch(
-          `http://localhost:5555/review/${editReviewId}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ content: editReviewContent }),
-          }
-        );
+        const response = await fetch(`/review/${editReviewId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ content: editReviewContent }),
+        });
 
         if (!response.ok) {
           throw new Error("Failed to update review");
@@ -112,7 +104,7 @@ function BookDetails() {
         setEditReviewId(null);
         setEditReviewContent("");
       } catch (error) {
-        setError("Failed to update review. Please try again.");
+        console.log(error);
       }
     }
   };
@@ -120,7 +112,7 @@ function BookDetails() {
   const deleteReview = async (reviewId) => {
     try {
       const token = localStorage.getItem("jwt_token");
-      const response = await fetch(`http://localhost:5555/review/${reviewId}`, {
+      const response = await fetch(`/review/${reviewId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

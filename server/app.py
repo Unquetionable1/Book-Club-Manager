@@ -1,4 +1,9 @@
-from flask import Flask, request, jsonify
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+from flask import Flask, request, jsonify, render_template
 from flask_migrate import Migrate
 from flask_restful import Resource, Api
 from flask_cors import CORS
@@ -9,11 +14,15 @@ from flask_jwt_extended import (
     get_jwt_identity,
     jwt_required,
     JWTManager,
-    create_refresh_token,
 )
 
-app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///site.db"
+app = Flask(
+    __name__,
+    static_url_path="",
+    static_folder="../client/build",
+    template_folder="../client/build",
+)
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URI")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = "my_secret_key"
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
@@ -29,6 +38,11 @@ migrate = Migrate(app, db)
 api = Api(app)
 # Instantiate CORS
 CORS(app)
+
+
+@app.errorhandler(404)
+def not_found(e):
+    return render_template("index.html")
 
 
 class BookResource(Resource):
@@ -417,7 +431,3 @@ class BookDetails(Resource):
 
 
 api.add_resource(BookDetails, "/book_detail/<int:book_id>")
-
-
-if __name__ == "__main__":
-    app.run(port=5555, debug=True)

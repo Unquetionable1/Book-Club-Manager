@@ -12,7 +12,7 @@ function Register() {
     e.preventDefault();
     // Handle user login logic here
     try {
-      const res = await fetch("http://localhost:5555/register", {
+      const res = await fetch("/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

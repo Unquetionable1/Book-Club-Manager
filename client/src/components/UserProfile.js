@@ -11,7 +11,7 @@ function UserProfile() {
     const fetchUserProfile = async () => {
       try {
         const token = localStorage.getItem("jwt_token");
-        const response = await fetch("http://localhost:5555/user/profile", {
+        const response = await fetch("/user/profile", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -37,7 +37,7 @@ function UserProfile() {
   const addFavorite = async () => {
     try {
       const token = localStorage.getItem("jwt_token");
-      const response = await fetch("http://localhost:5555/user/favorites", {
+      const response = await fetch("/user/favorites", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -63,7 +63,7 @@ function UserProfile() {
   const removeFavorite = async (bookId) => {
     try {
       const token = localStorage.getItem("jwt_token");
-      const response = await fetch("http://localhost:5555/user/favorites", {
+      const response = await fetch("/user/favorites", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -101,7 +101,12 @@ function UserProfile() {
           favorites.map((book) => (
             <div key={book.id} className="book-card-container">
               <BookCard book={book} />
-              <button className="removefav" onClick={() => removeFavorite(book.id)}>Remove</button>
+              <button
+                className="removefav"
+                onClick={() => removeFavorite(book.id)}
+              >
+                Remove
+              </button>
             </div>
           ))
         ) : (

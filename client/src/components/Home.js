@@ -70,7 +70,7 @@ function Home() {
   useEffect(() => {
     const getBooks = async () => {
       try {
-        const res = await fetch("http://127.0.0.1:5555/book"); // Ensure the endpoint is correct
+        const res = await fetch("/book"); // Ensure the endpoint is correct
         const data = await res.json();
         if (!res.ok) {
           throw new Error(data.message || "Failed to fetch books");
@@ -87,7 +87,7 @@ function Home() {
   const addToFavorites = async (bookId) => {
     try {
       const token = localStorage.getItem("jwt_token");
-      const response = await fetch("http://localhost:5555/user/favorites", {
+      const response = await fetch("/user/favorites", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
