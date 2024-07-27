@@ -8,18 +8,18 @@ function BookCard({ book }) {
   const [editReview, setEditReview] = useState('');
 
   useEffect(() => {
-    fetchReviews();
-  }, []);
+    const fetchReviews = async () => {
+      try {
+        const response = await fetch(`/review/book/${book.id}`);
+        const data = await response.json();
+        setReviews(data);
+      } catch (error) {
+        console.error('Error fetching reviews:', error);
+      }
+    };
 
-  const fetchReviews = async () => {
-    try {
-      const response = await fetch(`/review/book/${book.id}`);
-      const data = await response.json();
-      setReviews(data);
-    } catch (error) {
-      console.error('Error fetching reviews:', error);
-    }
-  };
+    fetchReviews();
+  }, [book.id]);
 
   const addReview = async () => {
     if (newReview.trim()) {
@@ -44,6 +44,8 @@ function BookCard({ book }) {
       } catch (error) {
         console.error('Error adding review:', error);
       }
+    } else {
+      alert('Review cannot be empty');
     }
   };
 
@@ -73,6 +75,8 @@ function BookCard({ book }) {
       } catch (error) {
         console.error('Error updating review:', error);
       }
+    } else {
+      alert('Review cannot be empty');
     }
   };
 
@@ -122,14 +126,15 @@ function BookCard({ book }) {
                       type="text"
                       value={editReview}
                       onChange={(e) => setEditReview(e.target.value)}
+                      className="review-input"
                     />
-                    <button onClick={updateReview}>Update</button>
+                    <button className="review-button" onClick={updateReview}>Update</button>
                   </div>
                 ) : (
                   <div>
                     <span>{review.content}</span>
-                    <button onClick={() => setEditIndex(index) & setEditReview(review.content)}>Edit</button>
-                    <button onClick={() => deleteReview(index)}>Delete</button>
+                    <button className="review-button" onClick={() => { setEditIndex(index); setEditReview(review.content); }}>Edit</button>
+                    <button className="review-button" onClick={() => deleteReview(index)}>Delete</button>
                   </div>
                 )}
               </li>
@@ -144,8 +149,9 @@ function BookCard({ book }) {
             placeholder="Add a review..."
             value={newReview}
             onChange={(e) => setNewReview(e.target.value)}
+            className="review-input"
           />
-          <button className='addReview' onClick={addReview}>Add Review</button>
+          <button className="review-button" onClick={addReview}>Add Review</button>
         </div>
       </div>
     </div>
